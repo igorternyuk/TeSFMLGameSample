@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include <iostream>
 
 Game::Game():
     mWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), TITLE_OF_MAIN_WINDOW),
@@ -6,9 +7,13 @@ Game::Game():
 {
     mWindow.setFramerateLimit(FPS);
     centralizeWindow();
-    mPlayer.setRadius(40.f);
-    mPlayer.setPosition(100.f, 100.f);
-    mPlayer.setFillColor(sf::Color::Green);
+    if(!mTexture.loadFromFile("resources/textures/Eagle.png"))
+    {
+        std::cout << "Could not load the player texture" << std::endl;
+    }
+    mPlayer.setTexture(mTexture);
+    mPlayer.setPosition((SCREEN_WIDTH - mPlayer.getGlobalBounds().width) / 2,
+                        (SCREEN_HEIGHT - mPlayer.getGlobalBounds().height) / 2);
 }
 
 void Game::run()

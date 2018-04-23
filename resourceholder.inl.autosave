@@ -1,0 +1,29 @@
+#include "resourceholder.hpp"
+#include <stdexcept>
+#include <cassert>
+
+void ResourceHolder::loadFromFile(Textures::ID id, const std::string &fileName)
+{
+    std::unique_ptr<sf::Texture> texture{std::make_unique<sf::Texture>()};
+    if(!texture->loadFromFile(fileName))
+    {
+        throw std::runtime_error("TextureHolder::load - Failed to load " + fileName);
+    }
+    auto inserted = mTextureMap.insert(std::make_pair(id, std::move(texture)));
+    assert(inserted.second); //Logic error
+}
+
+sf::Texture &ResourceHolder::get(Textures::ID id)
+{
+    auto found = mTextureMap.find(id);
+    assert(found != mTextureMap.end());
+    return *found->second;
+}
+
+const sf::Texture &ResourceHolder::get(Textures::ID id) const
+{
+    auto found = mTextureMap.find(id);
+    assert(found != mTextureMap.end());
+    return *found->second;
+}
+

@@ -7,4 +7,8 @@ SOURCES += main.cpp \
     game.cpp
 
 HEADERS += \
-    game.hpp
+    game.hpp \
+    resourcemanager.hpp
+
+DISTFILES += \
+    resourcemanager.impl

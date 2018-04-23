@@ -1,0 +1,24 @@
+#pragma once
+
+#include <SFML/Graphics.hpp>
+#include <map>
+#include <string>
+#include <memory>
+
+namespace Textures
+{
+    enum class ID { Landscape, Airplane, Missile };
+}
+
+template<class Resource, class Identifier >
+class ResourceHolder
+{
+public:
+    void loadFromFile(Identifier id, const std::string &fileName);
+    sf::Texture& get(Identifier id);
+    const sf::Texture& get(Identifier id) const;
+private:
+    std::map<Textures::ID, std::unique_ptr<sf::Texture>> mTextureMap;
+};
+
+#include "resourceholder.inl"

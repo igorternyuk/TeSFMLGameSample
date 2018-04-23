@@ -13,7 +13,7 @@ private:
     {
         SCREEN_WIDTH = 640,
         SCREEN_HEIGHT = 480,
-        FPS = 60
+        FPS = 30
     };
     void processEvents();
     void update(sf::Time frameTime);
@@ -22,7 +22,8 @@ private:
     void handlePlayerInput(sf::Keyboard::Key key, bool isPressed = true);
 
     sf::RenderWindow mWindow;
-    sf::CircleShape mPlayer;
+    sf::Texture mTexture;
+    sf::Sprite mPlayer;
     const sf::Time mFrameTime {sf::seconds(1.0f /FPS)};
     float mPlayerSpeed {100.0f};
     bool mIsMovingLeft = false;
