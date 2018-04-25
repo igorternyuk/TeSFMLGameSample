@@ -20,7 +20,7 @@ public:
     sf::Vector2f getWorldPosition() const;
     sf::Transform getWorldTransform() const;
 private:
-    void updateCurrent(sf::Time frameTime);
+    virtual void updateCurrent(sf::Time frameTime);
     void updateChildren(sf::Time frameTime);
     virtual void draw(sf::RenderTarget& target,
                       sf::RenderStates states) const final;

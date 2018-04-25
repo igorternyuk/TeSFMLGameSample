@@ -1,14 +1,20 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+
+#include "world.hpp"
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <string>
 
-class Game
+class Game: private sf::NonCopyable
 {
 public:
     explicit Game();
     void run();
 private:
-    const std::string TITLE_OF_MAIN_WINDOW {"Air combate"};
+    const std::string TITLE_OF_MAIN_WINDOW { "Air combate" };
     enum
     {
         SCREEN_WIDTH = 640,
@@ -18,17 +24,16 @@ private:
     void processEvents();
     void update(sf::Time frameTime);
     void render();
-    void centralizeWindow();
+    void updateStatistics(sf::Time frameTime);
     void handlePlayerInput(sf::Keyboard::Key key, bool isPressed = true);
+    void centralizeWindow();
 
-    sf::RenderWindow mWindow;
-    sf::Texture mTexture;
-    sf::Sprite mPlayer;
+private:
     const sf::Time mFrameTime {sf::seconds(1.0f /FPS)};
-    float mPlayerSpeed {100.0f};
-    bool mIsMovingLeft = false;
-    bool mIsMovingRight = false;
-    bool mIsMovingUp = false;
-    bool mIsMovingDown = false;
-
+    sf::RenderWindow mWindow;
+    World mWorld;
+    sf::Font mFont;
+    sf::Text mStatisticsText;
+    sf::Time mStatisticsUpdateTime;
+    size_t mStatisticsNumFrames;
 };

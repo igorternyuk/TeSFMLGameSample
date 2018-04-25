@@ -1,6 +1,7 @@
 #include "entity.hpp"
+#include <iostream>
 
-sf::Vector2f Entity::velocity() const
+sf::Vector2f Entity::getVelocity() const
 {
     return mVelocity;
 }
@@ -18,5 +19,6 @@ void Entity::setVelocity(const sf::Vector2f &velocity)
 
 void Entity::updateCurrent(sf::Time frameTime)
 {
+    std::cout << "Moving entity vel.y = " << mVelocity.y << std::endl;
     move(mVelocity * frameTime.asSeconds());
 }

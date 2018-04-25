@@ -38,10 +38,10 @@ private:
 private:
     sf::RenderWindow& mWindow;
     sf::View mWorldView;
-    TextureManager mTextures;
+    TextureManager mTextureManager;
     SceneNode mSceneGraph; //root
     std::array<SceneNode*, LayerCount> mSceneLayers;
-    sf::FloatRect mWorldBounds;
+    sf::IntRect mWorldBounds;
     sf::Vector2f mSpawnPosition;
     float mScrollSpeed;
     Aircraft* mPlayerAircraft;
