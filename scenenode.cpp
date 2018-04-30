@@ -1,6 +1,7 @@
 #include "scenenode.hpp"
-#include <algorithm>
+#include "command.hpp"
 #include <cassert>
+#include <algorithm>
 #include <iostream>
 
 SceneNode::SceneNode()
@@ -30,6 +31,19 @@ void SceneNode::update(sf::Time frameTime)
     updateChildren(frameTime);
 }
 
+void SceneNode::onCommand(const Command &command, sf::Time frameTime)
+{
+    if(command.category & getCategory())
+    {
+        command.action(*this, frameTime);
+    }
+
+    for(auto &child: mChildren)
+    {
+        child->onCommand(command, frameTime);
+    }
+}
+
 sf::Vector2f SceneNode::getWorldPosition() const
 {
     return getWorldTransform() * sf::Vector2f();
@@ -43,6 +57,11 @@ sf::Transform SceneNode::getWorldTransform() const
         transform = node->getTransform() * transform;
     }
     return transform;
+}
+
+Category SceneNode::getCategory() const
+{
+    return Category::Scene;
 }
 
 void SceneNode::updateCurrent(sf::Time frameTime)
@@ -63,10 +82,12 @@ void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const
     drawChildren(target, states);
 }
 
-void SceneNode::drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const
+void SceneNode::drawCurrent(sf::RenderTarget &target,
+                            sf::RenderStates states) const
 {}
 
-void SceneNode::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
+void SceneNode::drawChildren(sf::RenderTarget &target,
+                             sf::RenderStates states) const
 {
     for(auto &child: mChildren)
     {

@@ -9,7 +9,11 @@ SOURCES += main.cpp \
     aircraft.cpp \
     scenenode.cpp \
     world.cpp \
-    spritenode.cpp
+    spritenode.cpp \
+    command.cpp \
+    commandqueue.cpp \
+    player.cpp \
+    category.cpp
 
 HEADERS += \
     game.hpp \
@@ -19,7 +23,11 @@ HEADERS += \
     scenenode.hpp \
     world.hpp \
     spritenode.hpp \
-    resourceindentifiers.hpp
+    resourceindentifiers.hpp \
+    category.hpp \
+    command.hpp \
+    commandqueue.hpp \
+    player.hpp
 
 DISTFILES += \
     resourcemanager.impl

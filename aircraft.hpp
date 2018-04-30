@@ -14,9 +14,11 @@ public:
         Falcon
     };
     explicit Aircraft(Type type, const TextureManager& textures);
+    virtual Category getCategory() const override;
 
 private:
-    virtual void drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
+    virtual void drawCurrent(sf::RenderTarget &target,
+                             sf::RenderStates states) const override;
 
 private:
     Type mType;

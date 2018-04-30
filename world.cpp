@@ -1,11 +1,13 @@
 #include "world.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <cmath>
+#include <algorithm>
 #include <iostream>
 
 World::World(sf::RenderWindow & window):
     mWindow(window),
     mWorldView(window.getDefaultView()),
-    mWorldBounds(0.0f,0.0f,mWorldView.getSize().x, 2000.0f),
+    mWorldBounds(0.0f,0.0f,mWorldView.getSize().x, 10000.0f),
     mSpawnPosition(0.5f * mWorldView.getSize().x,
                    mWorldBounds.height - 0.5f * mWorldView.getSize().y),
     mScrollSpeed(-50.0f),
@@ -20,19 +22,18 @@ void World::update(sf::Time frameTime)
 {
     //Scroll the game world
     mWorldView.move(0.0f, mScrollSpeed * frameTime.asSeconds());
-    auto leaderPosition = mPlayerAircraft->getPosition();
-    auto leaderVelocity = mPlayerAircraft->getVelocity();
-    std::cout << "leaderVelocity = " << leaderVelocity.y << std::endl;
+    mPlayerAircraft->setVelocity(0.0f, 0.0f);
 
-    if(leaderPosition.x <= mWorldBounds.left + 150.0f
-       || leaderPosition.x >= mWorldBounds.left + mWorldBounds.width - 150.f)
+    //Here all commands from the queue forwarrd to the screne graph root node
+    while(!mCommandQueue.isEmpty())
     {
-        leaderVelocity.x = -leaderVelocity.x;
-        mPlayerAircraft->setVelocity(leaderVelocity);
+        mSceneGraph.onCommand(mCommandQueue.pop(), frameTime);
     }
 
+    adaptPlayerVelocity();
     //Apply movements
     mSceneGraph.update(frameTime);
+    keepPlayerPositionInsideTheScreenBounds();
 }
 
 void World::draw()
@@ -88,4 +89,39 @@ void World::buildScene()
     rightEscort->setPosition(+80.0f, 50.0f);
     mPlayerAircraft->attachChild(std::move(rightEscort));
 
+}
+
+void World::adaptPlayerVelocity()
+{
+    auto velocity = mPlayerAircraft->getVelocity();
+    /*If player aircraft moves diagonally, we will reduce velocity
+    (to have the same veloctity when the plane moves only in one direction*/
+    if(velocity.x != 0.0f && velocity.y != 0)
+    {
+        auto coef = float(1.0f /  sqrt(2.0f));
+        mPlayerAircraft->setVelocity(coef * velocity);
+    }
+    mPlayerAircraft->accelerate(0.0f, mScrollSpeed);
+}
+
+void World::keepPlayerPositionInsideTheScreenBounds()
+{
+    auto topLeftViewCorner = mWorldView.getCenter() - 0.5f * mWorldView.getSize();
+    sf::FloatRect viewBounds(topLeftViewCorner, mWorldView.getSize());
+    auto playerPosition = mPlayerAircraft->getPosition();
+    const float borderDistance = 40.0f;
+    playerPosition.x = std::max(playerPosition.x, viewBounds.left + borderDistance);
+    playerPosition.x = std::min(playerPosition.x,
+                                viewBounds.left + viewBounds.width - borderDistance);
+    playerPosition.y = std::max(playerPosition.y, viewBounds.top + borderDistance);
+    playerPosition.y = std::min(playerPosition.y,
+                                viewBounds.top + viewBounds.height -borderDistance);
+    mPlayerAircraft->setPosition(playerPosition);
+    std::cout << "x = " << mPlayerAircraft->getPosition().x << " y = "
+              << mPlayerAircraft->getPosition().y << std::endl;
+}
+
+CommandQueue &World::getCommandQueue()
+{
+    return mCommandQueue;
 }

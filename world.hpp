@@ -5,6 +5,7 @@
 #include "scenenode.hpp"
 #include "aircraft.hpp"
 #include "spritenode.hpp"
+#include "commandqueue.hpp"
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -23,9 +24,13 @@ public:
     void update(sf::Time frameTime);
     void draw();
 
+    CommandQueue& getCommandQueue();
+
 private:
     void loadTextures();
     void buildScene();
+    void adaptPlayerVelocity();
+    void keepPlayerPositionInsideTheScreenBounds();
 
 private:
     enum Layer
@@ -41,6 +46,7 @@ private:
     TextureManager mTextureManager;
     SceneNode mSceneGraph; //root
     std::array<SceneNode*, LayerCount> mSceneLayers;
+    CommandQueue mCommandQueue;
     sf::IntRect mWorldBounds;
     sf::Vector2f mSpawnPosition;
     float mScrollSpeed;

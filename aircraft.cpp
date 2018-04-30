@@ -25,6 +25,19 @@ Aircraft::Aircraft(Aircraft::Type type, const TextureManager &textures):
                       0.5f * spriteBoundingRect.height);
 }
 
+Category Aircraft::getCategory() const
+{
+    switch(mType)
+    {
+        case Aircraft::Type::Eagle:
+            return Category::PlayerAircraft;
+        case Aircraft::Type::Raptor:
+            return Category::AlliedAircraft;
+        default:
+            return Category::EnemyAircraft;
+    };
+}
+
 void Aircraft::drawCurrent(sf::RenderTarget &target,
                            sf::RenderStates states) const
 {

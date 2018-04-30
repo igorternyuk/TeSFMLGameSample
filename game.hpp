@@ -1,6 +1,7 @@
 #pragma once
 
 #include "world.hpp"
+#include "player.hpp"
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -32,6 +33,7 @@ private:
     const sf::Time mFrameTime {sf::seconds(1.0f /FPS)};
     sf::RenderWindow mWindow;
     World mWorld;
+    Player mPlayer;
     sf::Font mFont;
     sf::Text mStatisticsText;
     sf::Time mStatisticsUpdateTime;
